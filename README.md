@@ -1,2 +1,8 @@
 # MySchool
-Registro Elettronico, Progetto Quinta 25/26
+Barsoum Giorgio
+Progetto: MySchool
+Tagline: La tua scuola, in unico posto.
+Descrizione: Registro elettronico avanzato, integrante funzioni di condivisione e gestione compiti e materiale didattico (come classroom) e funzionalità avanzate per gestione documenti e dati anagrafici
+Target: Istituti Scolastici
+Competitors: Argo, Classeviva
+Link WebApp: barsoumgiorgio5IE.altervista.org
