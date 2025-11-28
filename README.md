@@ -152,3 +152,7 @@
 ## 🌐 Link WebApp
 
 * barsoumgiorgio5IE.altervista.org
+
+## 🌐 Link Demo
+
+* https://school-hub-italia.lovable.app
