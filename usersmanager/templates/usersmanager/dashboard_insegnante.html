@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Insegnante - MySchool</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #232526 0%, #414345 100%);
+            min-height: 100vh;
+            color: #fff;
+        }
+
+        .navbar {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            backdrop-filter: blur(10px);
+        }
+
+        .navbar h1 {
+            font-size: 24px;
+        }
+
+        .navbar a {
+            color: #fff;
+            text-decoration: none;
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+
+        .navbar a:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .welcome {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            padding: 40px;
+            border-radius: 20px;
+            margin-bottom: 30px;
+        }
+
+        .welcome h2 {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .welcome p {
+            opacity: 0.8;
+        }
+
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 30px;
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s;
+        }
+
+        .card:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-5px);
+        }
+
+        .card h3 {
+            margin-bottom: 10px;
+            color: #38ef7d;
+        }
+
+        .card p {
+            opacity: 0.7;
+            font-size: 14px;
+        }
+
+        .badge {
+            display: inline-block;
+            background: #11998e;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar">
+        <h1>🏫 MySchool - Insegnante</h1>
+        <div>
+            <span style="margin-right: 20px;">{{ user.get_full_name }}</span>
+            <a href="{% url 'usersmanager:logout' %}">Logout</a>
+        </div>
+    </nav>
+    <div class="container">
+        <div class="welcome">
+            <span class="badge">INSEGNANTE</span>
+            <h2>Benvenuto, {{ user.nome }}!</h2>
+            <p>Gestisci le tue classi e i voti degli studenti.</p>
+        </div>
+        <div class="cards">
+            <div class="card">
+                <h3>📝 Registro Voti</h3>
+                <p>Inserisci e modifica i voti degli studenti.</p>
+            </div>
+            <div class="card">
+                <h3>👨‍🎓 I Miei Studenti</h3>
+                <p>Visualizza l'elenco degli studenti delle tue classi.</p>
+            </div>
+            <div class="card">
+                <h3>📅 Calendario</h3>
+                <p>Consulta l'orario delle lezioni.</p>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
