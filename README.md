@@ -55,8 +55,6 @@ pip install django djangorestframework djangorestframework-simplejwt
 python manage.py migrate
 
 # 5. Popola il database con dati di test
-python manage.py seed_db       # seed completo (core/management/commands/)
-# oppure
 python manage.py seed_db       # seed esteso (users/management/commands/)
 
 # 6. Avvia il server di sviluppo
