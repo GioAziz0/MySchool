@@ -1,0 +1,76 @@
+{% extends "users/base.html" %}
+{% block title %}Seleziona scuola — MySchool{% endblock %}
+{% block card_max_width %}860px{% endblock %}
+
+{% block extra_style %}
+<style>
+  .school-icon {
+    font-size: 32px;
+    margin-bottom: 14px;
+    display: block;
+  }
+  .school-name {
+    font-size: 17px;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 10px;
+  }
+  .role-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 10px;
+  }
+  .role-badge {
+    background: rgba(255,255,255,.15);
+    border: 1px solid rgba(255,255,255,.2);
+    color: rgba(255,255,255,.85);
+    font-size: 12px;
+    padding: 3px 10px;
+    border-radius: 99px;
+  }
+  .glass-card form { margin: 0; }
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="auth-page">
+  <div class="auth-page-header">
+    <p style="font-size:30px;margin-bottom:8px;">👋</p>
+    <h1>Ciao, {{ user.first_name|default:user.username }}!</h1>
+    <p>Seleziona la scuola a cui vuoi accedere</p>
+  </div>
+
+  {% if tenants %}
+  <div class="glass-grid">
+    {% for item in tenants %}
+    <form method="post" action="{% url 'select-school' %}">
+      {% csrf_token %}
+      <input type="hidden" name="school_slug" value="{{ item.tenant.slug }}">
+      <button type="submit" class="glass-card">
+        <span class="school-icon">🏫</span>
+        <div class="school-name">{{ item.tenant.name }}</div>
+        <div class="role-badges">
+          {% for role in item.roles %}
+          <span class="role-badge">{{ role.icon }} {{ role.label }}</span>
+          {% endfor %}
+        </div>
+      </button>
+    </form>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div style="text-align:center;color:rgba(255,255,255,.5);padding:60px 0;">
+    <p style="font-size:48px;margin-bottom:16px;">😕</p>
+    <p style="font-size:16px;">Nessuna scuola associata al tuo account.</p>
+  </div>
+  {% endif %}
+
+  <div style="text-align:center;margin-top:32px;">
+    <form method="post" action="{% url 'logout' %}">
+      {% csrf_token %}
+      <button type="submit" class="btn btn-ghost">Esci dall'account</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

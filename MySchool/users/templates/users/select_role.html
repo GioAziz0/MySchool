@@ -1,0 +1,51 @@
+{% extends "users/base.html" %}
+{% block title %}Seleziona ruolo — MySchool{% endblock %}
+{% block card_max_width %}700px{% endblock %}
+
+{% block extra_style %}
+<style>
+  .role-icon { font-size: 36px; margin-bottom: 12px; display: block; }
+  .role-name { font-size: 18px; font-weight: 700; color: #fff; }
+  .role-desc { font-size: 13px; color: rgba(255,255,255,.55); margin-top: 4px; }
+  .glass-card form { margin: 0; }
+
+  .role-arrow {
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    opacity: .4;
+    font-size: 18px;
+    transition: opacity .2s, right .2s;
+  }
+  .glass-card { position: relative; }
+  .glass-card:hover .role-arrow { opacity: 1; right: 14px; }
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="auth-page" style="max-width:660px;">
+  <a href="{% url 'select-school' %}" class="back-link">
+    ← Cambia scuola
+  </a>
+
+  <div class="auth-page-header">
+    <h1>{{ tenant.name }}</h1>
+    <p>Scegli con quale ruolo vuoi accedere</p>
+  </div>
+
+  <div class="glass-grid" style="grid-template-columns: 1fr 1fr;">
+    {% for role in roles %}
+    <form method="post" action="{% url 'select-role' %}">
+      {% csrf_token %}
+      <input type="hidden" name="role" value="{{ role.code }}">
+      <button type="submit" class="glass-card" style="min-height:120px;">
+        <span class="role-icon">{{ role.icon }}</span>
+        <div class="role-name">{{ role.label }}</div>
+        <span class="role-arrow">→</span>
+      </button>
+    </form>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

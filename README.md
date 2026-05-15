@@ -1,158 +1,150 @@
-# MySchool
+# MySchool 3.5
 
-**Autore:** Barsoum Giorgio
-**Tagline:** *La tua scuola, in un unico posto.*
+![Stato](https://img.shields.io/badge/stato-in%20sviluppo-yellow)
+![Python](https://img.shields.io/badge/python-3.12-blue)
+![Django](https://img.shields.io/badge/django-6.0-green)
+![License](https://img.shields.io/badge/licenza-da%20definire-lightgrey)
 
-## 📘 Descrizione del progetto
-
-* Registro elettronico avanzato
-* Un'unica piattaforma per:
-
-  * registro
-  * compiti
-  * materiale didattico
-  * documenti
-  * comunicazioni
-  * anagrafiche
-  * pagamenti
-* Ispirato a:
-
-  * Google Classroom
-  * esigenze delle scuole italiane
+> Registro elettronico scolastico multi-tenant con API REST e interfaccia web, progettato per gestire voti, presenze, compiti e comunicazioni in istituti scolastici italiani.
 
 ---
 
-## 📚 Descrizione completa
+## Descrizione
 
-* Ecosistema digitale che integra:
-
-  * registro completo (assenze, presenze, ritardi, voti, note, condotta)
-  * gestione documenti e circolari:
-
-    * compilazione
-    * firma digitale
-    * presa visione
-  * sistema compiti simile a Classroom
-  * pagamenti tramite PagoPA
-  * gestione anagrafiche studenti/personale
+MySchool è un registro elettronico avanzato che consente a più istituti scolastici (tenant) di operare in modo completamente isolato sulla stessa piattaforma. Ogni scuola gestisce le proprie classi, materie, insegnanti e studenti tramite un sistema di ruoli e permessi granulari. Il sistema espone un'API REST protetta da JWT e una web UI basata su template Django.
 
 ---
 
-## ⭐ Funzionalità principali
+## Stack tecnologico
 
-### 📌 Registro & Andamento scolastico
-
-* Gestione assenze, presenze, ritardi
-* Gestione voti
-* Note disciplinari e condotta
-
-### 📌 Documenti & Comunicazioni
-
-* Creazione e invio di circolari/documenti
-* Firma digitale, compilazione, presa visione
-* Automazione comunicazioni
-
-### 📌 Didattica & Compiti
-
-* Dashboard compiti
-* Materiale didattico condiviso
-* Calendario integrato (classi, compiti, eventi)
-
-### 📌 Amministrazione scuola
-
-* Gestione classi, utenti, anagrafiche
-* Gestione permessi e ruoli
-* Integrazione con PagoPA
+| Componente           | Tecnologia                                      |
+|----------------------|-------------------------------------------------|
+| Backend framework    | Django 6.0                                      |
+| API REST             | Django REST Framework                           |
+| Autenticazione       | djangorestframework-simplejwt (JWT + blacklist) |
+| Database (sviluppo)  | SQLite 3                                        |
+| Linguaggio           | Python 3.12                                     |
+| Template engine      | Django Templates                                |
+| Multi-tenancy        | Middleware URL-based (slug nel path)            |
 
 ---
 
-## 🧑‍🤝‍🧑 Attori del sistema
+## Installazione e avvio
 
-### 🛠️ Ufficio Tecnico
+### Prerequisiti
 
-* Amministrazione completa del sistema
-* Gestione utenti/classi/documenti/circolari
-* Gestione assenze/presenze/ritardi
+- Python 3.12+
+- pip
 
-### 📑 Segreteria
+### Sviluppo
 
-* Accesso in sola visualizzazione
-* Gestione documenti, anagrafiche, pagamenti
+```bash
+# 1. Clona il repository
+git clone <repo-url>
+cd MySchool3.5/MySchool
 
-### 🎓 Dirigente Scolastico
+# 2. Crea e attiva l'ambiente virtuale
+python -m venv venv
+source venv/bin/activate       # Linux/macOS
+venv\Scripts\activate          # Windows
 
-* Accesso globale a tutte le classi
-* Avvio nuovo anno scolastico
+# 3. Installa le dipendenze
+pip install django djangorestframework djangorestframework-simplejwt
 
-### 👨‍🏫 Docente
+# 4. Applica le migrazioni
+python manage.py migrate
 
-* Registro per le proprie classi
-* Assegnazione compiti
-* Modifica calendario classe
-* Operatività limitata alle ore di responsabilità
+# 5. Popola il database con dati di test
+python manage.py seed_db       # seed completo (core/management/commands/)
+# oppure
+python manage.py seed_db       # seed esteso (users/management/commands/)
 
-### 🧒 Studente minorenne
+# 6. Avvia il server di sviluppo
+python manage.py runserver
+```
 
-* Visualizzazione dati personali
-* Consegna compiti
+Il server sarà disponibile su `http://127.0.0.1:8000`.
 
-### 🧑 Studente maggiorenne / Genitore
 
-* Tutto ciò che fa lo studente minorenne, più:
+## Funzionalità
 
-  * giustifica assenze/ritardi
-  * compila e firma documenti
+### Implementate ✅
 
-### 🌐 Utente non loggato
+- **Autenticazione JWT** — login con cookie HttpOnly (browser) e token nel body (mobile/API)
+- **Multi-tenancy** — isolamento completo tra scuole tramite slug nell'URL
+- **Gestione ruoli** — Teacher, Student, Parent, Admin con permessi granulari per ruolo e per singolo admin
+- **Classi e materie** — CRUD completo con scope per tenant
+- **Iscrizioni studenti** — storico completo dei cambi classe/anno
+- **Incarichi insegnanti** — assegnazione classe+materia per periodo
+- **Registro lezioni** — firma ora (Lesson), argomenti trattati
+- **Voti** — CRUD con scope per materia e classe
+- **Compiti** — assegnazione con data di consegna
+- **Assenze** — registrazione giornaliera, giustifica (genitore o studente maggiorenne)
+- **Ritardi** — registrazione con ora ingresso, giustifica, correzione orario (solo insegnante)
+- **Note disciplinari** — note informative e disciplinari su studenti
+- **Dashboard web** — viste HTML per insegnante, studente, genitore, admin
 
-* Accesso al sito vetrina
-* Informazioni commerciali e documentazione licenza
+### Roadmap / In sviluppo 🚧 / ❌
 
----
-
-## 💻 Interfacce del sistema
-
-### 👨‍👩‍👧 Studenti / Genitori
-
-* Visualizzazione voti, note, media, compiti
-* Giustifica assenze/ritardi
-* Compilazione/firma documenti
-* Visualizzazione circolari
-* Calendario personale e della classe
-* Consegna compiti
-
-### 👨‍🏫 Docenti
-
-* Appello
-* Inserimento/modifica/rimozione voti
-* Inserimento note
-* Andamento studenti
-* Assegnazione compiti
-* Gestione calendario classe
-
-### 🛠️ Tecnica / Amministrazione
-
-* Gestione comunicazioni, documenti, circolari
-* Gestione utenti e classi
-* Gestione anagrafiche
-* Gestione voti, note, assenze, ritardi
-* Gestione autorizzazioni
+- **Circolari e documenti** — compilazione, firma e presa visione digitale — non implementato
+- **Sistema compiti avanzato** — stile Google Classroom (consegna digitale, feedback) — non implementato
+- **Notifiche** — push/email per eventi registro — non implementato
+- **Gestione orario scolastico** — UI per la configurazione del calendario — non implementato
+- **Report e statistiche** — dashboard analitiche per admin e docenti — non implementato
 
 ---
 
-## 🎯 Target
+## Documentazione
 
-* Istituti scolastici italiani (elementari, medie, superiori)
+La cartella `docs/` contiene i documenti di progetto:
 
-## 🏆 Competitors
+- [DOCUMENTAZIONE](docs/DOCUMENTAZIONE.md)
+- [MANUALE UTENTE](docs/MANUALE_UTENTE.md)
+- [DIAGRAMMA DEI CASI D'USO](docs/CASI_D'USO.pdf)
+- [DIAGRAMMA DELLE CLASSI](docs/DIAGRAMMA_DELLE_CLASSI.pdf)
 
-* Argo
-* ClasseViva
+---
 
-## 🌐 Link WebApp
+## Struttura del progetto
 
-* barsoumgiorgio5IE.altervista.org
-
-## 🌐 Link Demo
-
-* https://school-hub-italia.lovable.app
+```
+MySchool3.5/
+├── docs/                          # Documentazione (questa cartella)
+└── MySchool/                      # Root del progetto Django
+    ├── manage.py
+    ├── db.sqlite3
+    ├── reset_db.sh
+    ├── MySchool/                  # Configurazione progetto
+    │   ├── settings.py
+    │   ├── urls.py
+    │   ├── wsgi.py
+    │   └── asgi.py
+    ├── tenants/                   # App multi-tenancy
+    │   ├── models.py              # Tenant
+    │   ├── middleware.py          # TenantMiddleware
+    │   └── migrations/
+    ├── users/                     # App utenti e autenticazione
+    │   ├── models.py              # User, UserRole, profili, permessi
+    │   ├── web_views.py           # Login, selezione scuola/ruolo, logout
+    │   ├── web_urls.py
+    │   ├── api/
+    │   │   ├── views.py           # LoginView, RefreshView, LogoutView
+    │   │   ├── urls.py
+    │   │   ├── authentication.py  # CookieJWTAuthentication
+    │   │   └── permissions.py     # IsActiveTenantMember, HasRolePermission, ecc.
+    │   ├── management/commands/
+    │   │   └── seed_db.py         
+    │   └── migrations/
+    └── core/                      # App registro scolastico
+        ├── models.py              # SchoolClass, Lesson, Grade, Absence, ecc.
+        ├── web_views.py           # Dashboard per ruolo
+        ├── web_urls.py
+        ├── api/
+        │   ├── views.py           # ViewSet per tutte le entità
+        │   ├── urls.py
+        │   └── serializers.py
+        ├── management/commands/
+        │   └── seed_db.py         # Seed realistico (Einstein + Marconi)
+        ├── templates/core/        # HTML dashboard
+        └── migrations/
+```

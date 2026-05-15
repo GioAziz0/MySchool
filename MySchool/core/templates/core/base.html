@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}MySchool{% endblock %}</title>
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --sidebar-w:   240px;
+      --topbar-h:    60px;
+      --dark:        #0f172a;
+      --dark2:       #1e293b;
+      --primary:     #6366f1;
+      --primary-dk:  #4f46e5;
+      --muted:       #94a3b8;
+      --bg:          #f1f5f9;
+      --card:        #ffffff;
+      --border:      #e2e8f0;
+      --text:        #0f172a;
+      --text-sm:     #64748b;
+      --success:     #16a34a;
+      --warning:     #d97706;
+      --danger:      #dc2626;
+      --radius:      10px;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    /* ══════════ LAYOUT ══════════ */
+    .layout { display: flex; height: 100vh; }
+
+    /* ══════════ SIDEBAR ══════════ */
+    .sidebar {
+      width: var(--sidebar-w);
+      background: var(--dark);
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+      overflow-y: auto;
+    }
+
+    .sidebar-brand {
+      padding: 20px 16px 16px;
+      border-bottom: 1px solid rgba(255,255,255,.06);
+    }
+
+    .sidebar-brand-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 4px;
+    }
+
+    .brand-icon {
+      width: 34px;
+      height: 34px;
+      background: var(--primary);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .brand-icon svg { width: 18px; height: 18px; fill: white; }
+
+    .brand-name {
+      font-size: 16px;
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: -.3px;
+    }
+
+    .brand-school {
+      font-size: 11px;
+      color: var(--muted);
+      padding-left: 44px;
+      line-height: 1.3;
+    }
+
+    /* ── Nav ── */
+    .sidebar-nav { flex: 1; padding: 12px 8px; }
+
+    .nav-section-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,.2);
+      padding: 14px 10px 6px;
+    }
+
+    .nav-link {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 10px;
+      border-radius: 8px;
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+      transition: all .15s;
+      margin-bottom: 2px;
+      cursor: pointer;
+      border: none;
+      background: none;
+      width: 100%;
+      text-align: left;
+    }
+
+    .nav-link svg { width: 16px; height: 16px; flex-shrink: 0; }
+
+    .nav-link:hover {
+      background: rgba(255,255,255,.06);
+      color: rgba(255,255,255,.85);
+    }
+
+    .nav-link.active {
+      background: var(--primary);
+      color: #fff;
+    }
+
+    .nav-link.active svg { opacity: 1; }
+
+    /* ── Sidebar footer ── */
+    .sidebar-footer {
+      padding: 14px 12px;
+      border-top: 1px solid rgba(255,255,255,.06);
+    }
+
+    .user-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .user-avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: var(--primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 14px;
+      color: #fff;
+      flex-shrink: 0;
+    }
+
+    .user-meta { overflow: hidden; }
+
+    .user-name {
+      font-size: 13px;
+      font-weight: 600;
+      color: #fff;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .user-role-label {
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .logout-form { margin: 0; }
+
+    .logout-btn {
+      width: 100%;
+      padding: 8px 10px;
+      background: rgba(255,255,255,.05);
+      border: 1px solid rgba(255,255,255,.1);
+      border-radius: 8px;
+      color: var(--muted);
+      font-size: 13px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: all .15s;
+    }
+
+    .logout-btn:hover {
+      background: rgba(239,68,68,.12);
+      border-color: rgba(239,68,68,.3);
+      color: #fca5a5;
+    }
+
+    .logout-btn svg { width: 14px; height: 14px; }
+
+    /* ══════════ MAIN ══════════ */
+    .main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    /* ── Top bar ── */
+    .topbar {
+      height: var(--topbar-h);
+      background: var(--card);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      flex-shrink: 0;
+    }
+
+    .topbar-left { display: flex; align-items: center; gap: 8px; }
+
+    .topbar-breadcrumb {
+      font-size: 13px;
+      color: var(--text-sm);
+    }
+
+    .topbar-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .topbar-sep { color: var(--border); }
+
+    .topbar-right {
+      font-size: 13px;
+      color: var(--text-sm);
+    }
+
+    /* ── Content ── */
+    .content {
+      flex: 1;
+      overflow-y: auto;
+      padding: 24px;
+    }
+
+    /* ══════════ SHARED COMPONENTS ══════════ */
+
+    /* Stats grid */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .stat-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      box-shadow: 0 1px 3px rgba(0,0,0,.04);
+    }
+
+    .stat-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .stat-icon svg { width: 22px; height: 22px; }
+
+    .stat-icon-blue  { background: #eff6ff; color: #2563eb; }
+    .stat-icon-green { background: #f0fdf4; color: #16a34a; }
+    .stat-icon-amber { background: #fffbeb; color: #d97706; }
+    .stat-icon-rose  { background: #fff1f2; color: #e11d48; }
+
+    .stat-value {
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1;
+    }
+
+    .stat-label { font-size: 12px; color: var(--text-sm); margin-top: 3px; }
+
+    /* Section card */
+    .section {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: 0 1px 3px rgba(0,0,0,.04);
+      margin-bottom: 20px;
+      overflow: hidden;
+    }
+
+    .section-header {
+      padding: 14px 20px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .section-title { font-size: 13px; font-weight: 600; color: var(--text); }
+
+    .section-count {
+      font-size: 12px;
+      background: #f1f5f9;
+      color: var(--text-sm);
+      padding: 2px 8px;
+      border-radius: 99px;
+    }
+
+    /* Table */
+    .data-table { width: 100%; border-collapse: collapse; }
+
+    .data-table th {
+      background: #f8fafc;
+      text-align: left;
+      padding: 9px 20px;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-sm);
+      text-transform: uppercase;
+      letter-spacing: .6px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .data-table td {
+      padding: 11px 20px;
+      font-size: 13px;
+      border-bottom: 1px solid #f8fafc;
+      color: var(--text);
+    }
+
+    .data-table tr:last-child td { border-bottom: none; }
+    .data-table tr:hover td { background: #f8fafc; }
+
+    /* Two-col grid */
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+
+    /* Badges */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    .badge-green { background: #dcfce7; color: #166534; }
+    .badge-red   { background: #fee2e2; color: #991b1b; }
+    .badge-blue  { background: #dbeafe; color: #1e40af; }
+    .badge-amber { background: #fef3c7; color: #92400e; }
+    .badge-slate { background: #f1f5f9; color: #475569; }
+
+    /* Grade value color */
+    .grade-high { color: var(--success); font-weight: 700; }
+    .grade-mid  { color: var(--warning); font-weight: 700; }
+    .grade-low  { color: var(--danger);  font-weight: 700; }
+
+    /* Empty state */
+    .empty {
+      padding: 40px 20px;
+      text-align: center;
+      color: var(--text-sm);
+      font-size: 13px;
+    }
+
+    .empty-icon { font-size: 32px; margin-bottom: 10px; }
+
+    /* Hour badge */
+    .hour-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      background: var(--primary);
+      color: #fff;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    /* Placeholder */
+    .placeholder-box {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 60vh;
+      text-align: center;
+      color: var(--text-sm);
+    }
+
+    .placeholder-box p { font-size: 42px; margin-bottom: 16px; }
+    .placeholder-box h2 { font-size: 22px; font-weight: 600; color: var(--text); }
+    .placeholder-box span { font-size: 14px; margin-top: 6px; }
+  </style>
+  {% block extra_style %}{% endblock %}
+</head>
+<body>
+<div class="layout">
+
+  <!-- ═══ SIDEBAR ═══ -->
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <div class="sidebar-brand-logo">
+        <div class="brand-icon">
+          <svg viewBox="0 0 24 24"><path d="M12 3L1 9l11 6 9-4.91V17h2V9L12 3zm0 2.18L19.6 9 12 12.82 4.4 9 12 5.18zM3 13.45V17c0 1.1 3.58 3 9 3s9-1.9 9-3v-3.55L12 17l-9-3.55z"/></svg>
+        </div>
+        <span class="brand-name">MySchool</span>
+      </div>
+      <div class="brand-school">{{ tenant.name }}</div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">Menu</div>
+
+      {% block nav_links %}
+      <a href="#" class="nav-link active">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg>
+        Dashboard
+      </a>
+      <a href="#" class="nav-link">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M21 5c-1.11-.35-2.33-.5-3.5-.5-1.95 0-4.05.4-5.5 1.5-1.45-1.1-3.55-1.5-5.5-1.5S2.45 4.9 1 6v14.65c0 .25.25.5.5.5.1 0 .15-.05.25-.05C3.1 20.45 5.05 20 6.5 20c1.95 0 4.05.4 5.5 1.5 1.35-.85 3.8-1.5 5.5-1.5 1.65 0 3.35.3 4.75 1.05.1.05.15.05.25.05.25 0 .5-.25.5-.5V6c-.6-.45-1.25-.75-2-1zM21 18.5c-1.1-.35-2.3-.5-3.5-.5-1.7 0-4.15.65-5.5 1.5V8c1.35-.85 3.8-1.5 5.5-1.5 1.2 0 2.4.15 3.5.5v11.5z"/></svg>
+        Registro
+      </a>
+      <a href="#" class="nav-link">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm4.59-12.42L10 14.17l-2.59-2.58L6 13l4 4 8-8-1.41-1.42z"/></svg>
+        Voti
+      </a>
+      <a href="#" class="nav-link">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 3h-4.18C14.4 1.84 13.3 1 12 1c-1.3 0-2.4.84-2.82 2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 0c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm2 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
+        Compiti
+      </a>
+      <a href="#" class="nav-link">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17 12h-5v5h5v-5zM16 1v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-1V1h-2zm3 18H5V8h14v11z"/></svg>
+        Presenze
+      </a>
+      <a href="#" class="nav-link">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.41 8.41l-4.83-4.83c-.37-.37-.88-.58-1.41-.58H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V9.83c0-.53-.21-1.04-.59-1.42zM7 7h7v2H7V7zm10 10H7v-2h10v2zm0-4H7v-2h10v2z"/></svg>
+        Note
+      </a>
+      {% endblock %}
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="user-row">
+        <div class="user-avatar">
+          {{ user.first_name|first|upper }}{{ user.last_name|first|upper }}
+        </div>
+        <div class="user-meta">
+          <div class="user-name">{{ user.get_full_name|default:user.username }}</div>
+          <div class="user-role-label">{% block role_label %}Utente{% endblock %}</div>
+        </div>
+      </div>
+      <form class="logout-form" method="post" action="{% url 'logout' %}">
+        {% csrf_token %}
+        <button type="submit" class="logout-btn">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5-5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/></svg>
+          Esci
+        </button>
+      </form>
+    </div>
+  </aside>
+
+  <!-- ═══ MAIN ═══ -->
+  <div class="main">
+    <div class="topbar">
+      <div class="topbar-left">
+        <span class="topbar-breadcrumb">{{ tenant.name }}</span>
+        <span class="topbar-sep">/</span>
+        <span class="topbar-title">{% block page_title %}Dashboard{% endblock %}</span>
+      </div>
+      <div class="topbar-right">{% block topbar_right %}{% endblock %}</div>
+    </div>
+
+    <div class="content">
+      {% block content %}{% endblock %}
+    </div>
+  </div>
+
+</div>
+</body>
+</html>
